@@ -30,18 +30,25 @@ import {
   MatSnackBarModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AddComponent} from './add/add.component';
 import {AgmCoreModule} from '@agm/core';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {Ng4LoadingSpinnerModule} from 'ng4-loading-spinner';
+import {AddDetailsComponent} from './add-details/add-details.component';
 import {UICarouselModule} from 'ui-carousel';
 import {CarouselModule} from 'ngx-bootstrap';
 import {FilterPipe} from './home/FilterPipe';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CalendarModule} from 'angular-calendar';
+import {CalendarComponent} from './calendar/calendar.component';
 import {DemoUtilsModule} from './demo-utils/module';
+import {MyAdsComponent} from './my-ads/my-ads.component';
+import {ModalAgreementComponent} from './modal-agreement/modal-agreement.component';
+import {FavoritesComponent} from './favorites/favorites.component';
 import {RatingModule} from 'ngx-rating';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import { ChartsComponent } from './charts/charts.component';
 import {ChartsModule} from 'ng2-charts';
 import {GuardService} from './guard.service';
 import {GuardRoleService} from './guard-role.service';
@@ -51,12 +58,30 @@ const appRoutes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: 'signup' , component: SignupComponent},
   { path: 'signin' , component: SigninComponent},
+  { path: 'add', component: AddComponent},
+  { path: 'AdDetails/:id', component: AddDetailsComponent},
+  { path: 'calendar',
+    component: CalendarComponent,
+    canActivate: [GuardService]
+  },
+  { path: 'myAds',
+    component: MyAdsComponent,
+    canActivate: [GuardService]
+  },
+  { path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [GuardService]
+  },
   { path: 'EditUser',
     component: EditUserComponent,
     canActivate: [GuardService]
   },
   { path: 'userList',
     component: UserListComponent,
+    canActivate: [GuardRoleService]
+  },
+  { path: 'statistics',
+    component: ChartsComponent,
     canActivate: [GuardRoleService]
   }
 ];
@@ -70,7 +95,14 @@ const appRoutes: Routes = [
     SignupComponent,
     SigninComponent,
     HeaderComponent,
+    AddComponent,
+    CalendarComponent,
+    AddDetailsComponent,
+    MyAdsComponent,
+    ModalAgreementComponent,
+    FavoritesComponent,
     EditUserComponent,
+    ChartsComponent,
   ],
   imports: [
     BrowserModule,
@@ -111,6 +143,7 @@ const appRoutes: Routes = [
       libraries: ['places', 'geometry']
     })
   ],
+  entryComponents: [ModalAgreementComponent],
   providers: [
     GuardRoleService,
     GuardService,

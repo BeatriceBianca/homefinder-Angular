@@ -3,7 +3,6 @@ import {UserService} from './user.service';
 import {MatSidenav} from '@angular/material';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MapsAPILoader} from '@agm/core';
-import {google} from '@agm/core/services/google-maps-types';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +26,26 @@ export class AppComponent implements OnInit {
     this.userService.searchElementRef = this.searchElementRef;
     this.userService.searchLocation = new FormGroup({
       'searchControl' : new FormControl(null)
+    });
+    this.mapsAPILoader.load().then(() => {
+      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        // types: ['address']
+      });
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+
+          // get the place result
+          const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          // verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          // set latitude, longitude and zoom
+          this.userService.searchLat = place.geometry.location.lat();
+          this.userService.searchLng = place.geometry.location.lng();
+          console.log(place + ' ' + this.userService.searchLat + ' ' + this.userService.searchLng);
+        });
+      });
     });
   }
 
