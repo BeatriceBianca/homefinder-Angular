@@ -6,6 +6,7 @@ import {User} from '../../models/user';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
+import {SnotifyService} from 'ng-snotify';
 
 @Component({
   selector: 'app-signin',
@@ -14,18 +15,21 @@ import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 })
 export class SigninComponent implements OnInit {
 
+  private readonly imageType: string = 'data:image/PNG;base64,';
   isLoginError = false;
   isLoginError2 = false;
 
   constructor(private authService: AuthService,
               private userService: UserService,
               private router: Router,
-              private spinnerService: Ng4LoadingSpinnerService) { }
+              private spinnerService: Ng4LoadingSpinnerService,
+              private snotifyService: SnotifyService) { }
 
   ngOnInit() {
   }
 
   onLogin(form: NgForm) {
+    this.userService.userEvent = true;
     const username = form.value.username;
     const password = form.value.password;
     this.spinnerService.show();
@@ -56,6 +60,33 @@ export class SigninComponent implements OnInit {
               } else {
                 this.userService.snotifyService.info('O programare este in asteptare', { position: 'rightTop'});
               }
+              this.userService.getFavoriteAds().subscribe(
+                response => {
+                  this.userService.favoriteAds = response;
+                  this.userService.favoriteAds.forEach( ad => ad.image = this.imageType + ad.image);
+                  console.log(response);
+                  // Favourite Button Check
+                  if (this.userService.favoriteAds.length > 0 && this.userService.adDetails) {
+                    this.userService.favoriteAds.forEach(
+                      ad => {
+                        console.log(ad.id);
+                        console.log(this.userService.adDetails.id);
+                        if (ad.id === this.userService.adDetails.id) {
+                          this.userService.isFavourite = true;
+                        }
+                      }
+                    );
+                  }
+                  if (this.userService.reviews.length > 0) {
+                    for (const review1 of this.userService.reviews) {
+                      if (review1.mail === this.userService.currentUser.email) {
+                        this.userService.userReviewedAd = true;
+                        return;
+                      }
+                    }
+                  }
+                }
+              );
               this.spinnerService.hide();
             } else {
               this.isLoginError2 = true;

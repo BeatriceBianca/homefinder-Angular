@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../user.service';
 import {MatDialog} from '@angular/material';
-import {Router} from '@angular/router';
 import {SigninComponent} from '../auth/signin/signin.component';
 import {SignupComponent} from '../auth/signup/signup.component';
+import {AddComponent} from '../add/add.component';
+import {Router} from '@angular/router';
 import {EditUserComponent} from '../edit-user/edit-user.component';
 
 @Component({
@@ -43,6 +44,16 @@ export class HeaderComponent implements OnInit {
         || this.router.url === '/userList' || this.router.url === 'statistics') {
       this.router.navigateByUrl('/home');
     }
+    this.userService.isFavourite = false;
+    this.userService.userReviewedAd = false;
+  }
+
+  addNewAd(): void {
+    this.userService.closeDialog.subscribe(result => this.dialog.closeAll());
+    const dialogRef = this.dialog.open(AddComponent, {
+      height: '75vh',
+      width: '50vw',
+    });
   }
 
   openEdit() {

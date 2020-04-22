@@ -1,6 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {google} from '@agm/core/services/google-maps-types';
-
 @Pipe({
   name: 'filter'
 })
