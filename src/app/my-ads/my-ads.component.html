@@ -1,0 +1,30 @@
+<!--<ng4-loading-spinner></ng4-loading-spinner>-->
+<div class="ads__title">
+  <h1>Anunțurile mele: </h1>
+  <h1 *ngIf="userService.myAds.length === 0">Nu aveți anunțuri adăugate!</h1>
+</div>
+<div class="custom__container">
+  <div *ngFor="let ad of userService.myAds | paginate: {itemsPerPage: userService.itemsOnPage, currentPage: userService.page}; let i = index">
+    <mat-card class="card__class">
+      <mat-card-header>
+        <mat-card-title>{{ ad.title}}</mat-card-title>
+        <mat-card-subtitle>{{ ad.adType }} - {{ad.adItemType}}</mat-card-subtitle>
+        <img src="../../assets/casa.jpg" *ngIf="ad.adItemType == 'Casa'" mat-card-avatar>
+        <img src="../../assets/bloc.jpg" *ngIf="ad.adItemType == 'Apartament'" mat-card-avatar>
+      </mat-card-header>
+      <mat-card-content>Preț: {{ ad.price }} <span class="fa fa-euro"></span></mat-card-content>
+<!--      <img mat-card-image height="300px"  [src]="ad.image">-->
+      <mat-card-actions class="ad__buttons">
+        <button mat-raised-button mat-button color="primary" (click)="viewAdDetails(ad)">Editează anunț</button>
+        <button mat-raised-button mat-button color="warn" (click)="deleteAd(ad)">Șterge anunțul</button>
+      </mat-card-actions>
+    </mat-card><br>
+  </div>
+</div>
+<div class="myPaginationContainer" *ngIf="userService.myAds.length > 0">
+  <pagination-controls class="myPagination" (pageChange)="userService.page = $event"
+                       previousLabel="Înapoi"
+                       nextLabel="Înainte" maxSize="5">
+  </pagination-controls>
+</div>
+
